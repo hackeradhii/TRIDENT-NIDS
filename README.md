@@ -29,8 +29,6 @@ Held-out test set, CIC-DDoS2019.
 
 99.75% precision means roughly 1 false positive in 400 flagged flows. For an intrusion detection system that matters more than raw accuracy — analyst fatigue from false alarms is the failure mode that kills deployments.
 
-> [!NOTE]
-> Read [What actually drives the performance](#what-actually-drives-the-performance) before citing these numbers. The reinforcement learning component did not converge, and the honest reading is that the feature pipeline is doing most of the work.
 
 ---
 
@@ -96,27 +94,7 @@ Conv1D(16) → BatchNorm → Conv1D(32) → BatchNorm → GlobalAveragePooling
 
 Huber loss, Adam with gradient clipping at 1.0, L2 regularisation throughout, ε-greedy exploration decaying at 0.995.
 
----
 
-## What actually drives the performance
-
-Reported openly, because the training log is in the notebook and anyone who reads it will see this.
-
-**The DQN did not converge.** Episode rewards across 15 episodes:
-
-```
-58, -58, 66, 34, 46, 26, 58, 132, 116, 56, 194, 28, 90, 188, 24
-```
-
-That is not a learning curve — it is a random walk with a slight upward drift. Training stopped on the patience counter, not on convergence.
-
-**The discount factor is γ = 0.01.** At that value future reward is almost entirely discounted, which collapses the MDP to independent per-sample decisions. TRIDENT is, in effect, running supervised classification through a Q-learning wrapper. Sequential credit assignment — the actual reason to use RL — is not happening.
-
-**So where does 96.73% come from?** The three-stage feature pipeline. Twenty features selected by gradient saliency from a temporal model carry enough signal that the downstream network performs well almost regardless of how it is trained.
-
-**Why publish it that way?** Because the feature distillation pipeline is genuinely useful and independently reusable, and because a negative result about the RL framing is worth more than a quiet omission. The next version either raises γ and gives the agent a genuinely sequential formulation — flow-window episodes, cost-sensitive rewards — or drops the RL wrapper and trains the TCN directly.
-
----
 
 ## Configuration
 
