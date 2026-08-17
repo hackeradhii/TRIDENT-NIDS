@@ -139,11 +139,3 @@ jupyter notebook trident.ipynb
 
 MIT — see [LICENSE](LICENSE).
 
----
-
-<div align="center">
-
-Part of a series on machine learning for network security  
-[WGT-Net](https://github.com/hackeradhii/wgt-net) · [WH-PhishNet](https://github.com/hackeradhii/wh-phisnet) · [CSDTab-ID](https://github.com/hackeradhii/csdtab-id)
-
-</div>
